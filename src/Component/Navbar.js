@@ -5,7 +5,7 @@ export const Navbar = ({value, setSlide, slide}) => {
     <nav className="col-span-10 row-span-1 m-0 p-4 ">
     <div className='border-b border-[#dadce0] flex justify-between items-center pb-4'>
       <div className="flex space-x-4 items-center">
-        <GiHamburgerMenu className='text-[22px]' />
+        <GiHamburgerMenu className='text-[22px] cursor-pointer' onClick={() => setSlide(!slide)}/>
         <img className='w-[40px] h-[40px]' src="https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_30_2x.png" alt="logo Icon" />
         <span className='text-[22px]'>Calendar</span>
       </div>

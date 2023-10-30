@@ -16,7 +16,7 @@ useEffect(() => {
   return (
     <div className='h-screen w-screen grid grid-rows-6 grid-cols-8'>
         <Navbar value={`${value.toDateString()}`} setSlide={setSlide} slide={slide}/>
-        <Task value={value} setValue={setValue} slide={slide} />
+        <Task value={value} setValue={setValue} slide={slide} setSlide={setSlide}/>
         <CalendarContainer value={value} setValue={setValue}/>
     </div>
   )

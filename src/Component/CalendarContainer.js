@@ -139,14 +139,14 @@ export const CalendarContainer = ({value, setValue}) => {
 
 
   return (
-    <div className='col-span-8 row-span-5 grid grid-cols-8 grid-rows-25 border border-gray-300 overflow-y-scroll' style={{ gridTemplateColumns: '45px repeat(7, 1fr)' }}>
+    <div className='col-span-8 row-span-5 grid grid-cols-8 grid-rows-25 overflow-y-scroll' style={{ gridTemplateColumns: '45px repeat(7, 1fr)' }}>
     <DragDropContext onDragEnd={dragEndHandler}>
       <div className='col-span-1'></div>
       <DaysComponent dates={dates} startDate={startDate} days={days} monthNames={monthNames} />
       {hours.map((hour, index) => (
         <React.Fragment key={index}>
-          <div className='border border-gray-300 h-[180px]'>
-            {hour}
+          <div className='border-t border-r border-[#dadce0] h-[100px]'>
+            <span className='text-[#70757a]'>{hour}</span>
           </div>
           {dates.map((date, index) => (
             <Droppable droppableId={`${date.getDate()}_${monthNames[date.getMonth()]}_${hour}`}>
@@ -157,7 +157,7 @@ export const CalendarContainer = ({value, setValue}) => {
               onClick={containerHandler}
               ref={provided.innerRef}
               {...provided.droppableProps}
-              className='border border-gray-300 h-[180px] p-1'
+              className='border border-[#dadce0] h-[100px] p-1'
             >
                 {
                 alltaskContainer.find(container => container.selectContainerName === `${date.getDate()}_${monthNames[date.getMonth()]}_${hour}`)?.task.map((task, index) => { 

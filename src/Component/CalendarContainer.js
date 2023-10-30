@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { days, hours , monthNames} from '../Utils/date';
 import DaysComponent from './SubComponents/DaysComponent';
 import { AllModalComponents } from './SubComponents/AllModalComponents';
+import { Draggable,Droppable, DragDropContext } from "react-beautiful-dnd";
+
 export const CalendarContainer = ({value, setValue}) => {
 
   const [startDate, setStartDate] = useState(new Date());
@@ -23,7 +25,7 @@ export const CalendarContainer = ({value, setValue}) => {
         setStartDate(new Date(value));
       }
     }
-  }, [value]);
+  }, [value, startDate]);
 
   const dates = Array.from({length: 7}, (_, i) => {
     const date = new Date(startDate);
@@ -102,8 +104,43 @@ export const CalendarContainer = ({value, setValue}) => {
     setShowEditModal(false)
   }
   }
+  const dragEndHandler = (e) => {
+    if(e){
+      const sourceIdContainer = e.source.droppableId;       //"30_Oct_1AM"
+      const destinationIdContainer = e.destination.droppableId; //"31_Oct_1AM"
+      const draggableId = e.draggableId;          // 12232
+  
+      // If source and destination are same
+      if (sourceIdContainer === destinationIdContainer) return;
+  
+      // Find source and destination containers
+      const sourceContainer = alltaskContainer.find(container => container.selectContainerName === sourceIdContainer);
+      const destinationContainer = alltaskContainer.find(container => container.selectContainerName === destinationIdContainer);
+  
+      // Find task in source container
+      const taskIndex = sourceContainer.task.findIndex(task => task.id === draggableId);
+      const [task] = sourceContainer.task.splice(taskIndex, 1);
+  
+      // Add task to destination container
+      if (destinationContainer) {
+        destinationContainer.task.push(task);
+      } else {
+        alltaskContainer.push({
+          selectContainerName: destinationIdContainer,
+          task: [task]
+        });
+      }
+  
+      // Update state
+      setAlltaskContainer([...alltaskContainer]);
+    }
+  }
+  
+
+
   return (
     <div className='col-span-8 row-span-5 grid grid-cols-8 grid-rows-25 border border-gray-300 overflow-y-scroll' style={{ gridTemplateColumns: '45px repeat(7, 1fr)' }}>
+    <DragDropContext onDragEnd={dragEndHandler}>
       <div className='col-span-1'></div>
       <DaysComponent dates={dates} startDate={startDate} days={days} monthNames={monthNames} />
       {hours.map((hour, index) => (
@@ -112,29 +149,49 @@ export const CalendarContainer = ({value, setValue}) => {
             {hour}
           </div>
           {dates.map((date, index) => (
-            <div 
+            <Droppable droppableId={`${date.getDate()}_${monthNames[date.getMonth()]}_${hour}`}>
+            {(provided, snapshot) => (
+              <div 
               key={index} 
               id={`${date.getDate()}_${monthNames[date.getMonth()]}_${hour}`}
               onClick={containerHandler}
+              ref={provided.innerRef}
+              {...provided.droppableProps}
               className='border border-gray-300 h-[180px] p-1'
             >
                 {
                 alltaskContainer.find(container => container.selectContainerName === `${date.getDate()}_${monthNames[date.getMonth()]}_${hour}`)?.task.map((task, index) => { 
-                  return <div id={task.id} key={task.id} className='mt-1 w-full rounded-lg bg-[#1a73e8] text-white cursor-pointer p-2' onClick={(e)=>{     
+                  return (
+                  <Draggable draggableId={`${task.id}`} index={index}>    
+                  {(provided, snapshot) => (             
+                  <div id={task.id} key={task.id} className='mt-1 w-full rounded-lg bg-[#1a73e8] text-white cursor-pointer p-2' 
+                  onClick={(e)=>{     
                     e.stopPropagation();
                     setCurrentTask(task.id)
                     setSelectContainer(`${date.getDate()}_${monthNames[date.getMonth()]}_${hour}`);
-                    editModalController(task.title ,task.description)}}>
+                    editModalController(task.title ,task.description)}}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    ref={provided.innerRef}
+                    >
                      {task.title} {task.description}
+                     {provided.placeholder}
+
                   </div>
+                  )}
+                  </Draggable>)
                 })
                 }
-
+                {provided.placeholder}
             </div>
+            )}
+            </Droppable>
           ))}
+      
         </React.Fragment>
       ))}
               <AllModalComponents title={title} setTitle={setTitle} description={description} setDescription={setDescription} saveahandler={saveahandler} showEditModal={showEditModal} setShowEditModal={setShowEditModal} setShowModal={setShowModal} showModal={showModal} editSaveHandler={editSaveHandler} />
+              </DragDropContext>
     </div>
   )
 }

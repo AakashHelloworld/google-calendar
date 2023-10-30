@@ -6,6 +6,8 @@ import { CalendarContainer } from '../Component/CalendarContainer'
 export default function CalendarPage(){
   const [value, setValue] = useState(new Date());
 
+
+
   return (
     <div className='h-screen w-screen grid grid-rows-6 grid-cols-8'>
         <Navbar/>

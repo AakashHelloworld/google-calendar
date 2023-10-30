@@ -1,13 +1,13 @@
-import { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
-export default function CalendarCmponent() {
-  const [value, onChange] = useState(new Date());
-
+export default function CalendarCmponent({value, setValue}) {
+  const changeHandler = (e) =>{
+    setValue(e)
+  }
   return (
     <div>
-      <Calendar className={'border-none'} onChange={onChange} value={value} />
+      <Calendar className={'border-none'} onChange={changeHandler} value={value} />
     </div>
   );
 }

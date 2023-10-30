@@ -2,7 +2,7 @@ import React from 'react'
 import {Button} from '../Form/Button'
 import CalendarCmponent from './SubComponents/CalendarCmponent'
 
-export const Task = () => {
+export const Task = ({value, setValue}) => {
     const clickHandler = ()=>{
         console.log("Hello")
     }
@@ -16,7 +16,7 @@ export const Task = () => {
             </Button>
         </div>
         <div className='m-2'>
-        <CalendarCmponent/>
+        <CalendarCmponent value={value} setValue={setValue} />
         </div>
 
  

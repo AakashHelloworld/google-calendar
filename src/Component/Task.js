@@ -2,9 +2,9 @@ import React from 'react'
 import {Button} from '../Form/Button'
 import CalendarCmponent from './SubComponents/CalendarCmponent'
 
-export const Task = ({value, setValue, slide}) => {
+export const Task = ({value, setValue, slide, showModal, setShowModal }) => {
     const clickHandler = ()=>{
-        console.log("Hello")
+        setShowModal(true)
     }
 
   return (

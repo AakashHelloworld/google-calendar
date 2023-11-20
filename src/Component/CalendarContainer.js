@@ -4,14 +4,13 @@ import DaysComponent from './SubComponents/DaysComponent';
 import { AllModalComponents } from './SubComponents/AllModalComponents';
 import { Draggable,Droppable, DragDropContext } from "react-beautiful-dnd";
 
-export const CalendarContainer = ({value, setValue}) => {
+export const CalendarContainer = ({value, setValue, setShowModal, showModal}) => {
 
   const [startDate, setStartDate] = useState(new Date());
-  const [showModal, setShowModal] = useState(false); 
   const [showEditModal, setShowEditModal] = useState(false)
   const [title, setTitle] = useState(''); 
   const [description, setDescription] = useState(''); 
-  const [selectContainer, setSelectContainer] = useState("");
+  const [selectContainer, setSelectContainer] = useState(value?.toDateString()?.split(" ")[2] + "_" + value?.toDateString()?.split(" ")[1] + "_1AM");
   const [alltaskContainer, setAlltaskContainer] = useState([]);
   const [currentTask, setCurrentTask] = useState("");
 
@@ -135,7 +134,6 @@ export const CalendarContainer = ({value, setValue}) => {
       setAlltaskContainer([...alltaskContainer]);
     }
   }
-  
 
 
   return (
@@ -148,8 +146,8 @@ export const CalendarContainer = ({value, setValue}) => {
           <div className='border-t border-r border-[#dadce0] h-[100px]'>
             <span className='text-[#70757a]'>{hour}</span>
           </div>
-          {dates.map((date, index) => (
-            <Droppable droppableId={`${date.getDate()}_${monthNames[date.getMonth()]}_${hour}`}>
+          {dates.map((date, index) =>{
+            return (<Droppable droppableId={`${date.getDate()}_${monthNames[date.getMonth()]}_${hour}`}>
             {(provided, snapshot) => (
               <div 
               key={index} 
@@ -186,7 +184,8 @@ export const CalendarContainer = ({value, setValue}) => {
             </div>
             )}
             </Droppable>
-          ))}
+
+          )})}
       
         </React.Fragment>
       ))}

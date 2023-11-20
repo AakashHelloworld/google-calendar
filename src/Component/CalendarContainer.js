@@ -118,9 +118,38 @@ export const CalendarContainer = ({value, setValue, setShowModal, showModal,curr
       updateFilter.push(filterContainer[0])
       setAlltaskContainer(updateFilter)
       setShowEditModal(false) 
+      setTitle("")
+      setDescription("")
     }
+
   }
   }
+
+  // const deleteHandler = (id)=>{
+  //   console.log(currentTask)
+  //   const filterContainer = alltaskContainer.filter((container)=>{
+      
+  //   })
+  // }
+  const deleteHandler = (id) => {
+    const updatedContainers = alltaskContainer.map((container) => {
+      if (container.selectContainerName === selectContainer) {
+        return {
+          ...container,
+          task: container.task.filter((task) => task.id !== currentTask),
+        };
+      } else {
+        return container;
+      }
+    });
+    setTitle('');
+    setDescription('');
+    setShowEditModal(false) 
+    setAlltaskContainer(updatedContainers);
+  };
+  
+
+
   const dragEndHandler = (e) => {
     if(e){
       const sourceIdContainer = e.source.droppableId;       //"30_Oct_1AM"
@@ -173,7 +202,7 @@ export const CalendarContainer = ({value, setValue, setShowModal, showModal,curr
               onClick={containerHandler}
               ref={provided.innerRef}
               {...provided.droppableProps}
-              className={`border ${selectContainer==`${date.getDate()}_${monthNames[date.getMonth()]}_${hour}`? 'border-violet-500':'border-[#dadce0]'} h-[100px] p-1`}
+              className={`border-2 ${selectContainer==`${date.getDate()}_${monthNames[date.getMonth()]}_${hour}`? 'border-violet-500':'border-[#dadce0]'} h-[100px] p-1`}
             >
                 {
                 alltaskContainer.find(container => container.selectContainerName === `${date.getDate()}_${monthNames[date.getMonth()]}_${hour}`)?.task.map((task, index) => { 
@@ -207,7 +236,7 @@ export const CalendarContainer = ({value, setValue, setShowModal, showModal,curr
       
         </React.Fragment>
       ))}
-              <AllModalComponents title={title} setTitle={setTitle} description={description} setDescription={setDescription} saveahandler={saveahandler} showEditModal={showEditModal} setShowEditModal={setShowEditModal} setShowModal={setShowModal} showModal={showModal} editSaveHandler={editSaveHandler} />
+              <AllModalComponents deleteHandler={deleteHandler} title={title} setTitle={setTitle} description={description} setDescription={setDescription} saveahandler={saveahandler} showEditModal={showEditModal} setShowEditModal={setShowEditModal} setShowModal={setShowModal} showModal={showModal} editSaveHandler={editSaveHandler} />
               </DragDropContext>
     </div>
   )

@@ -4,13 +4,13 @@ import DaysComponent from './SubComponents/DaysComponent';
 import { AllModalComponents } from './SubComponents/AllModalComponents';
 import { Draggable,Droppable, DragDropContext } from "react-beautiful-dnd";
 
-export const CalendarContainer = ({value, setValue, setShowModal, showModal}) => {
+export const CalendarContainer = ({value, setValue, setShowModal, showModal,currentSlected}) => {
 
   const [startDate, setStartDate] = useState(new Date());
   const [showEditModal, setShowEditModal] = useState(false)
   const [title, setTitle] = useState(''); 
   const [description, setDescription] = useState(''); 
-  const [selectContainer, setSelectContainer] = useState(value?.toDateString()?.split(" ")[2] + "_" + value?.toDateString()?.split(" ")[1] + "_1AM");
+  const [selectContainer, setSelectContainer] = useState(currentSlected);
   const [alltaskContainer, setAlltaskContainer] = useState([]);
   const [currentTask, setCurrentTask] = useState("");
 
@@ -147,6 +147,10 @@ export const CalendarContainer = ({value, setValue, setShowModal, showModal}) =>
             <span className='text-[#70757a]'>{hour}</span>
           </div>
           {dates.map((date, index) =>{
+
+            console.log(selectContainer,`${date.getDate()}_${monthNames[date.getMonth()]}_${hour}`)
+
+
             return (<Droppable droppableId={`${date.getDate()}_${monthNames[date.getMonth()]}_${hour}`}>
             {(provided, snapshot) => (
               <div 
@@ -155,7 +159,7 @@ export const CalendarContainer = ({value, setValue, setShowModal, showModal}) =>
               onClick={containerHandler}
               ref={provided.innerRef}
               {...provided.droppableProps}
-              className='border border-[#dadce0] h-[100px] p-1'
+              className={`border ${selectContainer==`${date.getDate()}_${monthNames[date.getMonth()]}_${hour}`? 'border-violet-500':'border-[#dadce0]'} h-[100px] p-1`}
             >
                 {
                 alltaskContainer.find(container => container.selectContainerName === `${date.getDate()}_${monthNames[date.getMonth()]}_${hour}`)?.task.map((task, index) => { 

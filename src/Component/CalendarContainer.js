@@ -15,6 +15,14 @@ export const CalendarContainer = ({value, setValue, setShowModal, showModal,curr
   const [currentTask, setCurrentTask] = useState("");
 
   useEffect(() => {
+    console.log(localStorage.getItem('alltaskContainer'))
+    if(localStorage.getItem('alltaskContainer')){
+      setAlltaskContainer(JSON.parse(localStorage.getItem('alltaskContainer')))
+    }
+  }, [])
+
+
+  useEffect(() => {
     if (value) {
       const selectedDate = new Date(value);
       const endDate = new Date(startDate);
@@ -25,6 +33,15 @@ export const CalendarContainer = ({value, setValue, setShowModal, showModal,curr
       }
     }
   }, [value, startDate]);
+
+
+
+
+  useEffect(() => {
+    if(alltaskContainer){
+    localStorage.setItem('alltaskContainer', JSON.stringify(alltaskContainer))
+    }
+  }, [alltaskContainer])
 
   const dates = Array.from({length: 7}, (_, i) => {
     const date = new Date(startDate);
@@ -44,7 +61,6 @@ export const CalendarContainer = ({value, setValue, setShowModal, showModal,curr
         return container.selectContainerName === selectContainer
       })
       if(filterContainer.length){
-        console.log('I am running')
         filterContainer[0].task.push({
           id:  Math.floor(10000+Math.random()*10000),
           title,
@@ -86,21 +102,23 @@ export const CalendarContainer = ({value, setValue, setShowModal, showModal,curr
   }
 
   const editSaveHandler = ()=>{
-    const filterContainer = alltaskContainer.filter((container)=>{return container.selectContainerName == selectContainer})
-    if(filterContainer.length){
-    const filterTask = filterContainer[0].task.filter((data)=>{return data.id != currentTask})
-    filterTask.push({
-      id: currentTask,
-      title,
-      description
-    })
-    filterContainer[0].task = filterTask
-    let updateFilter = alltaskContainer.filter((container)=>{
-      return container.selectContainerName != selectContainer
-    })
-    updateFilter.push(filterContainer[0])
-    setAlltaskContainer(updateFilter)
-    setShowEditModal(false)
+    if(title){
+      const filterContainer = alltaskContainer.filter((container)=>{return container.selectContainerName == selectContainer})
+      if(filterContainer.length){
+      const filterTask = filterContainer[0].task.filter((data)=>{return data.id != currentTask})
+      filterTask.push({
+        id: currentTask,
+        title,
+        description
+      })
+      filterContainer[0].task = filterTask
+      let updateFilter = alltaskContainer.filter((container)=>{
+        return container.selectContainerName != selectContainer
+      })
+      updateFilter.push(filterContainer[0])
+      setAlltaskContainer(updateFilter)
+      setShowEditModal(false) 
+    }
   }
   }
   const dragEndHandler = (e) => {
@@ -147,10 +165,6 @@ export const CalendarContainer = ({value, setValue, setShowModal, showModal,curr
             <span className='text-[#70757a]'>{hour}</span>
           </div>
           {dates.map((date, index) =>{
-
-            console.log(selectContainer,`${date.getDate()}_${monthNames[date.getMonth()]}_${hour}`)
-
-
             return (<Droppable droppableId={`${date.getDate()}_${monthNames[date.getMonth()]}_${hour}`}>
             {(provided, snapshot) => (
               <div 

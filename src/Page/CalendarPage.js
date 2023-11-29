@@ -5,9 +5,11 @@ import { CalendarContainer } from '../Component/CalendarContainer'
 
 export default function CalendarPage(){
   const [value, setValue] = useState(new Date());
-  const [slide, setSlide] = useState(true);
+  const [slide, setSlide] = useState(false);
   const [showModal, setShowModal] = useState(false); 
   const [currentSlected, setCurrentSlected] = useState("");
+  const [deviceType, setDeviceType] = useState("");
+
   
 
 useEffect(() => {
@@ -26,6 +28,15 @@ useEffect(() => {
     setCurrentSlected(formattedDate);
   }
 }, [value])
+
+
+
+useEffect(() => {
+  const checkDeviceType = () => {
+    setSlide(window.innerWidth <= 768 ? false : true);
+  };
+  checkDeviceType();
+}, []);
 
   return (
     <div className='flex flex-col h-screen w-screen md:grid md:grid-rows-6 md:grid-cols-8 '>

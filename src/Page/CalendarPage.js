@@ -12,21 +12,23 @@ export default function CalendarPage(){
 
 useEffect(() => {
   if(value){
-    var original_str = value.toDateString();
-    var date = new Date(original_str);
-    var day = date.getUTCDate();
-    var month = date.toLocaleString('default', { month: 'short' });
-    var hour = date.getUTCHours();
-    var ampm = hour >= 12 ? 'PM' : 'AM';
-    hour = hour % 12;
-    hour = hour ? hour : 12; 
-    var new_str = day+1 + "_" + month + "_" + hour + ampm;
-    setCurrentSlected(new_str);
+    console.log(value);
+    let day = value.getDate();
+    let monthIndex = value.getMonth();
+    let hours = value.getHours();
+    let monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    let month = monthNames[monthIndex];
+    let period = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    let formattedDate = `${day}_${month}_${hours}${period}`;
+    console.log(formattedDate);
+    setCurrentSlected(formattedDate);
   }
 }, [value])
 
   return (
-    <div className='h-screen w-screen grid grid-rows-6 grid-cols-8'>
+    <div className='flex flex-col h-screen w-screen md:grid md:grid-rows-6 md:grid-cols-8 '>
         <Navbar value={`${value.toDateString()}`} setSlide={setSlide} slide={slide}/>
         <Task showModal={showModal} setShowModal={setShowModal}  value={value} setValue={setValue} slide={slide} setSlide={setSlide}/>
         { currentSlected &&

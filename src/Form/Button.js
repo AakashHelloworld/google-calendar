@@ -7,6 +7,6 @@ export const Button = (props) => {
     clickHandler,
     } = props;
   return (
-    <button onClick={clickHandler} className={`px-6 py-2 cursor-pointer rounded-full ${className}`}>{children}</button>
+    <button onClick={clickHandler} className={`px-6 py-2 cursor-pointer rounded ${className}`}>{children}</button>
   )
 }

@@ -7,7 +7,7 @@ import { Draggable,Droppable, DragDropContext } from "react-beautiful-dnd";
 export const CalendarContainer = ({value, setValue, setShowModal, showModal,currentSlected}) => {
 
   const [startDate, setStartDate] = useState(new Date());
-  const [showEditModal, setShowEditModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false);
   const [title, setTitle] = useState(''); 
   const [description, setDescription] = useState(''); 
   const [selectContainer, setSelectContainer] = useState(currentSlected);
@@ -15,12 +15,22 @@ export const CalendarContainer = ({value, setValue, setShowModal, showModal,curr
   const [currentTask, setCurrentTask] = useState("");
 
   useEffect(() => {
-    console.log(localStorage.getItem('alltaskContainer'))
+    // console.log(localStorage.getItem('alltaskContainer'))
     if(localStorage.getItem('alltaskContainer')){
       setAlltaskContainer(JSON.parse(localStorage.getItem('alltaskContainer')))
     }
   }, [])
 
+  useEffect(() => {
+    // Get the element you want to scroll to
+    const element = document.getElementById(selectContainer);
+  
+    // Check if the element exists
+    if (element) {
+      // Scroll to the element
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [selectContainer]);
 
   useEffect(() => {
     if (value) {
@@ -51,7 +61,7 @@ export const CalendarContainer = ({value, setValue, setShowModal, showModal,curr
 
   const containerHandler = (e)=>{
     setShowModal(true)
-    console.log(e.target.id)
+    // console.log(e.target.id)
     setSelectContainer(e.target.id)
   }
 
@@ -125,12 +135,7 @@ export const CalendarContainer = ({value, setValue, setShowModal, showModal,curr
   }
   }
 
-  // const deleteHandler = (id)=>{
-  //   console.log(currentTask)
-  //   const filterContainer = alltaskContainer.filter((container)=>{
-      
-  //   })
-  // }
+
   const deleteHandler = (id) => {
     const updatedContainers = alltaskContainer.map((container) => {
       if (container.selectContainerName === selectContainer) {
@@ -188,6 +193,7 @@ export const CalendarContainer = ({value, setValue, setShowModal, showModal,curr
     <DragDropContext onDragEnd={dragEndHandler}>
       <div className='col-span-1'></div>
       <DaysComponent dates={dates} startDate={startDate} days={days} monthNames={monthNames} />
+
       {hours.map((hour, index) => (
         <React.Fragment key={index}>
           <div className='border-t border-r border-[#dadce0] h-[100px]'>
@@ -197,6 +203,7 @@ export const CalendarContainer = ({value, setValue, setShowModal, showModal,curr
             return (<Droppable droppableId={`${date.getDate()}_${monthNames[date.getMonth()]}_${hour}`}>
             {(provided, snapshot) => (
               <div 
+
               key={index} 
               id={`${date.getDate()}_${monthNames[date.getMonth()]}_${hour}`}
               onClick={containerHandler}
@@ -219,7 +226,8 @@ export const CalendarContainer = ({value, setValue, setShowModal, showModal,curr
                     {...provided.dragHandleProps}
                     ref={provided.innerRef}
                     >
-                     {task.title} {task.description}
+                    {task.title.length > 15 ? task.title.slice(0, 13) + '...' : task.title}
+{/* =                     {task.title} */}
                      {provided.placeholder}
 
                   </div>
@@ -236,6 +244,7 @@ export const CalendarContainer = ({value, setValue, setShowModal, showModal,curr
       
         </React.Fragment>
       ))}
+      
               <AllModalComponents deleteHandler={deleteHandler} title={title} setTitle={setTitle} description={description} setDescription={setDescription} saveahandler={saveahandler} showEditModal={showEditModal} setShowEditModal={setShowEditModal} setShowModal={setShowModal} showModal={showModal} editSaveHandler={editSaveHandler} />
               </DragDropContext>
     </div>

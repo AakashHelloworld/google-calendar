@@ -10,6 +10,6 @@ export const Input = (props) => {
   value
   } = props;
   return (
-    <input value={value} className={`mt-2 border rounded-md p-2 w-full ${className}`} onChange={changeHandler} type={type} placeholder={placeholder} />
+    <input value={value} className={`mt-2 w-72 p-2 ${className}`} onChange={changeHandler} type={type} placeholder={placeholder} />
   )
 }
